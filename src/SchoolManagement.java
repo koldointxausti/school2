@@ -127,8 +127,8 @@ public class SchoolManagement {
 										int month = sc.nextInt();
 										System.out.println("day:");
 										int day = sc.nextInt();
-										Calendar birthDate = new Calendar.Builder().setCalendarType("iso8601")
-												.setDate(year, month, day).build();
+										String birthDate= year+"/"+month+"/"+day;
+							// we don't know the format it asks for the date
 										while (!school.getTeachers().get(teacherIndex).isValidDate(birthDate)) {
 											System.out.println("Enter a valid date");
 											System.out.println("year:");
@@ -137,8 +137,7 @@ public class SchoolManagement {
 											month = sc.nextInt();
 											System.out.println("day:");
 											day = sc.nextInt();
-											birthDate = new Calendar.Builder().setCalendarType("iso8601")
-													.setDate(year, month, day).build();
+											birthDate = year+"/"+month+"/"+day;
 										}
 										school.getTeachers().get(teacherIndex).setBirthDate(birthDate);
 										System.out.println("Done.");
@@ -149,7 +148,7 @@ public class SchoolManagement {
 														+ "\nEnter the new dni bellow:");
 										String dni = sc.next();
 										sc.nextLine();
-										while (!school.getTeachers().get(teacherIndex).checkDni(dni)) {
+										while (!school.getTeachers().get(teacherIndex).isValidDni(dni)) {
 											System.out.println("Enter a valid DNI");
 											dni = sc.next();
 											sc.nextLine();
@@ -159,16 +158,16 @@ public class SchoolManagement {
 										break;
 									case "4": // phone number
 										System.out.println("Your actual phone number is "
-												+ school.getTeachers().get(teacherIndex).getPhoneNumber()
+												+ school.getTeachers().get(teacherIndex).getTelephone()
 												+ "\nEnter the new phone number bellow:");
 										String phoneNumber = sc.next();
 										sc.nextLine();
-										while (!school.getTeachers().get(teacherIndex).checkPhoneNumber(phoneNumber)) {
+										while (!school.getTeachers().get(teacherIndex).isValidTelephone(phoneNumber)) {
 											System.out.println("Enter a valid phone number");
 											phoneNumber = sc.next();
 											sc.nextLine();
 										}
-										school.getTeachers().get(teacherIndex).setPhoneNumber(phoneNumber);
+										school.getTeachers().get(teacherIndex).setTelephone(phoneNumber);
 										System.out.println("Done.");
 										break;
 									case "5": // salary
@@ -186,7 +185,7 @@ public class SchoolManagement {
 									case "6": // subjects
 										System.out.println("Your actual subjects are ");
 										for (int i = 0; i < school.getTeachers().get(teacherIndex).getSubjects().size(); i++)
-											System.out.println("\t" + school.getTeachers().get(teacherIndex).getSubject(i));
+											System.out.println("\t" + school.getTeachers().get(teacherIndex).getSubjects().get(i));
 										System.out.println("How many subjects are you teaching now?");
 										int numberOfSubjects = sc.nextInt();
 										for (int i = 0; i < numberOfSubjects; i++) {
@@ -209,7 +208,7 @@ public class SchoolManagement {
 							int teacherIndex = school.findTeacherID(sc.next().toUpperCase());
 							sc.nextLine();
 							if (teacherIndex >= 0) {
-								school.deleteTeacher(teacherIndex);
+								school.deleteTeacher(school.getTeachers().get(teacherIndex).getName());
 								System.out.println("Done.");
 							} else
 								System.out.println("Wrong teacher ID");
@@ -257,7 +256,7 @@ public class SchoolManagement {
 						System.out.println("DNI:");
 						String dni = sc.next();
 						sc.nextLine();
-						while (!teacher.checkDni(dni)) {
+						while (!teacher.isValidDni(dni)) {
 							System.out.println("Enter a valid DNI");
 							dni = sc.next();
 							sc.nextLine();
@@ -268,12 +267,12 @@ public class SchoolManagement {
 						System.out.println("Telephone number:");
 						String phoneNumber = sc.next();
 						sc.nextLine();
-						while (!teacher.checkPhoneNumber(phoneNumber)) {
+						while (!teacher.isValidTelephone(phoneNumber)) {
 							System.out.println("Enter a valid phone number");
 							phoneNumber = sc.next();
 							sc.nextLine();
 						}
-						teacher.setPhoneNumber(phoneNumber);
+						teacher.setTelephone(phoneNumber);
 
 						// salary
 						System.out.println("Salary:");
@@ -387,7 +386,7 @@ public class SchoolManagement {
 								System.out.println("Birth date:\t" + date);
 								System.out.println("Dni:\t" + school.getStudent(studentIndex).getDni());
 								System.out
-										.println("Phone number:\t " + school.getStudent(studentIndex).getPhoneNumber());
+										.println("Phone number:\t " + school.getStudent(studentIndex).getTelephone());
 								System.out.println("Absenses:\t" + school.getStudent(studentIndex).getAbsenses());
 								System.out.println("Classroom:\t" + school.getStudent(studentIndex).getClassroom());
 								System.out
@@ -472,7 +471,7 @@ public class SchoolManagement {
 														+ "\nEnter the new dni bellow:");
 										String dni = sc.next();
 										sc.nextLine();
-										while (!school.getStudent(studentIndex).checkDni(dni)) {
+										while (!school.getStudent(studentIndex).isValidDni(dni)) {
 											System.out.println("Enter a valid DNI");
 											dni = sc.next();
 											sc.nextLine();
@@ -482,16 +481,16 @@ public class SchoolManagement {
 										break;
 									case "4": // phone number
 										System.out.println("Your actual phone number is "
-												+ school.getStudent(studentIndex).getPhoneNumber()
+												+ school.getStudent(studentIndex).getTelephone()
 												+ "\nEnter the new phone number bellow:");
 										String phoneNumber = sc.next();
 										sc.nextLine();
-										while (!school.getStudent(studentIndex).checkPhoneNumber(phoneNumber)) {
+										while (!school.getStudent(studentIndex).isValidTelephone(phoneNumber)) {
 											System.out.println("Enter a valid phone number");
 											phoneNumber = sc.next();
 											sc.nextLine();
 										}
-										school.getStudent(studentIndex).setPhoneNumber(phoneNumber);
+										school.getStudent(studentIndex).setTelephone(phoneNumber);
 										System.out.println("Done.");
 										break;
 									case "5": // absenses
@@ -584,7 +583,7 @@ public class SchoolManagement {
 							int studentIndex = school.findStudentID(sc.next().toUpperCase());
 							sc.nextLine();
 							if (studentIndex >= 0) {
-								school.deleteStudent(studentIndex);
+								school.deleteTeacher(school.getStudents().get(studentIndex).getName());
 								System.out.println("Done.");
 							} else
 								System.out.println("Wrong student ID");
@@ -632,7 +631,7 @@ public class SchoolManagement {
 						System.out.println("DNI:");
 						String dni = sc.next();
 						sc.nextLine();
-						while (!student.checkDni(dni)) {
+						while (!student.isValidDni(dni)) {
 							System.out.println("Enter a valid DNI");
 							dni = sc.next();
 							sc.nextLine();
@@ -643,12 +642,12 @@ public class SchoolManagement {
 						System.out.println("Telephone number:");
 						String phoneNumber = sc.next();
 						sc.nextLine();
-						while (!student.checkPhoneNumber(phoneNumber)) {
+						while (!student.isValidTelephone(phoneNumber)) {
 							System.out.println("Enter a valid phone number");
 							phoneNumber = sc.next();
 							sc.nextLine();
 						}
-						student.setPhoneNumber(phoneNumber);
+						student.setTelephone(phoneNumber);
 
 						// absenses
 						System.out.println("Absenses:");
@@ -780,7 +779,7 @@ public class SchoolManagement {
 								System.out.println("Birth date:\t" + date);
 								System.out.println("Dni:\t" + school.getAdministrative(administrativeIndex).getDni());
 								System.out.println("Phone number:\t "
-										+ school.getAdministrative(administrativeIndex).getPhoneNumber());
+										+ school.getAdministrative(administrativeIndex).getTelephone());
 								System.out.println(
 										"Salary:\t " + school.getAdministrative(administrativeIndex).getSalary());
 								date = school.getAdministrative(administrativeIndex).getJoined()
@@ -873,7 +872,7 @@ public class SchoolManagement {
 												+ "\nEnter the new dni bellow:");
 										String dni = sc.next();
 										sc.nextLine();
-										while (!school.getAdministrative(administrativeIndex).checkDni(dni)) {
+										while (!school.getAdministrative(administrativeIndex).isValidDni(dni)) {
 											System.out.println("Enter a valid DNI");
 											dni = sc.next();
 											sc.nextLine();
@@ -883,17 +882,17 @@ public class SchoolManagement {
 										break;
 									case "4": // phone number
 										System.out.println("Your actual phone number is "
-												+ school.getAdministrative(administrativeIndex).getPhoneNumber()
+												+ school.getAdministrative(administrativeIndex).getTelephone()
 												+ "\nEnter the new phone number bellow:");
 										String phoneNumber = sc.next();
 										sc.nextLine();
 										while (!school.getAdministrative(administrativeIndex)
-												.checkPhoneNumber(phoneNumber)) {
+												.isValidTelephone(phoneNumber)) {
 											System.out.println("Enter a valid phone number");
 											phoneNumber = sc.next();
 											sc.nextLine();
 										}
-										school.getAdministrative(administrativeIndex).setPhoneNumber(phoneNumber);
+										school.getAdministrative(administrativeIndex).setTelephone(phoneNumber);
 										System.out.println("Done.");
 										break;
 									case "5": // salary
@@ -939,7 +938,7 @@ public class SchoolManagement {
 							int administrativeIndex = school.findAdministrativeID(sc.next().toUpperCase());
 							sc.nextLine();
 							if (administrativeIndex >= 0) {
-								school.deleteAdministrative(administrativeIndex);
+								school.deleteAdministrative(school.getAdministratives().get(administrativeIndex).getName());
 								System.out.println("Done.");
 							} else
 								System.out.println("Wrong administrative ID");
@@ -987,7 +986,7 @@ public class SchoolManagement {
 						System.out.println("DNI:");
 						String dni = sc.next();
 						sc.nextLine();
-						while (!administrative.checkDni(dni)) {
+						while (!administrative.isValidDni(dni)) {
 							System.out.println("Enter a valid DNI");
 							dni = sc.next();
 							sc.nextLine();
@@ -998,12 +997,12 @@ public class SchoolManagement {
 						System.out.println("Telephone number:");
 						String phoneNumber = sc.next();
 						sc.nextLine();
-						while (!administrative.checkPhoneNumber(phoneNumber)) {
+						while (!administrative.isValidTelephone(phoneNumber)) {
 							System.out.println("Enter a valid phone number");
 							phoneNumber = sc.next();
 							sc.nextLine();
 						}
-						administrative.setPhoneNumber(phoneNumber);
+						administrative.setTelephone(phoneNumber);
 
 						// salary
 						System.out.println("Salary:");
