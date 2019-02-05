@@ -1,12 +1,5 @@
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Calendar.Builder;
 import java.util.Scanner;
-
 import com.zubiri.*;
-
-import java.io.*;
 
 public class SchoolManagement {
 
@@ -171,11 +164,12 @@ public class SchoolManagement {
 										System.out.println("Done.");
 										break;
 									case "5": // salary
+										//There is not a checksalary method
 										System.out.println(
 												"Your actual salary is " + school.getTeachers().get(teacherIndex).getSalary()
 														+ "\nEnter the new salary bellow:");
 										double salary = sc.nextDouble();
-										while (!school.getTeachers().get(teacherIndex).checkSalary(salary)) {
+										while (salary < 0) {
 											System.out.println("Enter a valid salary");
 											salary = sc.nextDouble();
 										}
@@ -222,7 +216,8 @@ public class SchoolManagement {
 						System.out.println("Name:");
 						String possibleName = sc.next();
 						sc.nextLine();
-						while (!teacher.checkName(possibleName)) {
+						//There is no matchname
+						while (possibleName.matches("^[A-Za-z]+")) {
 							System.out.println("Enter a valid name (no numbers)");
 							possibleName = sc.next();
 							sc.nextLine();
@@ -237,8 +232,9 @@ public class SchoolManagement {
 						int month = sc.nextInt();
 						System.out.println("day:");
 						int day = sc.nextInt();
-						Calendar birthDate = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-								.build();
+						String birthDate= year+"/"+month+"/"+day;
+						
+						//We dont know the format
 						while (!teacher.isValidDate(birthDate)) {
 							System.out.println("Enter a valid date");
 							System.out.println("year:");
@@ -247,8 +243,7 @@ public class SchoolManagement {
 							month = sc.nextInt();
 							System.out.println("day:");
 							day = sc.nextInt();
-							birthDate = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-									.build();
+							birthDate= year+"/"+month+"/"+day;
 						}
 						teacher.setBirthDate(birthDate);
 
@@ -277,7 +272,7 @@ public class SchoolManagement {
 						// salary
 						System.out.println("Salary:");
 						double salary = sc.nextDouble();
-						while (!teacher.checkSalary(salary)) {
+						while (salary < 0) {
 							System.out.println("Enter a valid salary");
 							salary = sc.nextDouble();
 						}
@@ -291,8 +286,7 @@ public class SchoolManagement {
 						month = sc.nextInt();
 						System.out.println("day:");
 						day = sc.nextInt();
-						Calendar joined = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-								.build();
+						String joined = year+"/"+month+"/"+day;
 						while (!teacher.isValidDate(joined)) {
 							System.out.println("Enter a valid date");
 							System.out.println("year:");
@@ -301,10 +295,9 @@ public class SchoolManagement {
 							month = sc.nextInt();
 							System.out.println("day:");
 							day = sc.nextInt();
-							joined = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-									.build();
+							joined = joined = year+"/"+month+"/"+day;
 						}
-						teacher.setJoined(joined);
+						teacher.setJoinedDate(joined);
 
 						// tutor
 						System.out.println("Is she/he a tutor? (y/n)");
@@ -365,8 +358,8 @@ public class SchoolManagement {
 					case "1":// list IDs
 						if (school.getStudents().size() > 0) {
 							for (int i = 0; i < school.getStudents().size(); i++) {
-								System.out.println("- " + school.getStudent(i).getStudentID() + "\t"
-										+ school.getStudent(i).getName());
+								System.out.println("- " + school.getStudents().get(i).getStudentID() + "\t"
+										+ school.getStudents().get(i).getName());
 							}
 						} else
 							System.out.println("There's no student created yet.");
@@ -379,21 +372,24 @@ public class SchoolManagement {
 							sc.nextLine();
 							System.out.println(studentIndex);
 							if (studentIndex >= 0) {
-								System.out.println("Name:\t" + school.getStudent(studentIndex).getName());
-								String date = school.getStudent(studentIndex).getBirthDate().get(Calendar.DAY_OF_MONTH)
-										+ "/" + school.getStudent(studentIndex).getBirthDate().get(Calendar.MONTH) + "/"
-										+ school.getStudent(studentIndex).getBirthDate().get(Calendar.YEAR);
+								System.out.println("Name:\t" + school.getStudents().get(studentIndex).getName());
+								String date = school.getStudents().get(studentIndex).getBirthDate();
 								System.out.println("Birth date:\t" + date);
-								System.out.println("Dni:\t" + school.getStudent(studentIndex).getDni());
+								System.out.println("Dni:\t" + school.getStudents().get(studentIndex).getDni());
 								System.out
-										.println("Phone number:\t " + school.getStudent(studentIndex).getTelephone());
-								System.out.println("Absenses:\t" + school.getStudent(studentIndex).getAbsenses());
-								System.out.println("Classroom:\t" + school.getStudent(studentIndex).getClassroom());
+										.println("Phone number:\t " + school.getStudents().get(studentIndex).getTelephone());
+								System.out.println("Absenses:\t" + school.getStudents().get(studentIndex).getAbsenses());
+								System.out.println("Classroom:\t" + school.getStudents().get(studentIndex).getClassroom());
 								System.out
-										.println("Mark average:\t" + school.getStudent(studentIndex).getMarkAverage());
-								System.out.println("Course:\t" + school.getStudent(studentIndex).getCourse());
+										.println("Mark average:\t" + school.getStudents().get(studentIndex).getMarkAverage());
+								/*
+								//There is no course get method
+								System.out.println("Course:\t" + school.getStudents().get(studentIndex).getCourse());
+								//There is no repeter get method
 								if (school.getStudent(studentIndex).getRepeater())
 									System.out.println("Has repeated at leat one course.");
+									
+									*/
 							} else
 								System.out.println("Wrong student ID");
 						} else
@@ -423,25 +419,17 @@ public class SchoolManagement {
 										break;
 									case "1": // name
 										System.out.println(
-												"Your actual name is " + school.getStudent(studentIndex).getName()
+												"Your actual name is " + school.getStudents().get(studentIndex).getName()
 														+ "\nEnter the new name bellow:");
 										String possibleName = sc.next();
 										sc.nextLine();
-										while (!school.getStudent(studentIndex).checkName(possibleName)) {
-											System.out.println("Enter a valid name (no numbers)");
-											possibleName = sc.next();
-											sc.nextLine();
-										}
-										school.getStudent(studentIndex).setName(possibleName);
+										
+										school.getStudents().get(studentIndex).setName(possibleName);
 										System.out.println("Done.");
 										break;
 									case "2": // birth date
-										String date = school.getStudent(studentIndex).getBirthDate()
-												.get(Calendar.DAY_OF_MONTH) + "/"
-												+ school.getStudent(studentIndex).getBirthDate().get(Calendar.MONTH)
-												+ "/"
-												+ school.getStudent(studentIndex).getBirthDate().get(Calendar.YEAR);
-										System.out.println("Your actual birth date is " + date
+										
+										System.out.println("Your actual birth date is " + school.getStudents().get(studentIndex).getBirthDate()
 												+ "\nEnter the new birth date bellow:");
 										System.out.println("year:");
 										int year = sc.nextInt();
@@ -449,9 +437,8 @@ public class SchoolManagement {
 										int month = sc.nextInt();
 										System.out.println("day:");
 										int day = sc.nextInt();
-										Calendar birthDate = new Calendar.Builder().setCalendarType("iso8601")
-												.setDate(year, month, day).build();
-										while (!school.getStudent(studentIndex).isValidDate(birthDate)) {
+										String birthDate = year+"/"+month+"/"+day;
+										while (!school.getStudents().get(studentIndex).isValidDate(birthDate)) {
 											System.out.println("Enter a valid date");
 											System.out.println("year:");
 											year = sc.nextInt();
@@ -459,48 +446,47 @@ public class SchoolManagement {
 											month = sc.nextInt();
 											System.out.println("day:");
 											day = sc.nextInt();
-											birthDate = new Calendar.Builder().setCalendarType("iso8601")
-													.setDate(year, month, day).build();
+											birthDate = year+"/"+month+"/"+day;
 										}
-										school.getStudent(studentIndex).setBirthDate(birthDate);
+										school.getStudents().get(studentIndex).setBirthDate(birthDate);
 										System.out.println("Done.");
 										break;
 									case "3": // dni
 										System.out.println(
-												"Your actual dni is " + school.getStudent(studentIndex).getDni()
+												"Your actual dni is " + school.getStudents().get(studentIndex).getDni()
 														+ "\nEnter the new dni bellow:");
 										String dni = sc.next();
 										sc.nextLine();
-										while (!school.getStudent(studentIndex).isValidDni(dni)) {
+										while (!school.getStudents().get(studentIndex).isValidDni(dni)) {
 											System.out.println("Enter a valid DNI");
 											dni = sc.next();
 											sc.nextLine();
 										}
-										school.getStudent(studentIndex).setDni(dni);
+										school.getStudents().get(studentIndex).setDni(dni);
 										System.out.println("Done.");
 										break;
 									case "4": // phone number
 										System.out.println("Your actual phone number is "
-												+ school.getStudent(studentIndex).getTelephone()
+												+ school.getStudents().get(studentIndex).getTelephone()
 												+ "\nEnter the new phone number bellow:");
 										String phoneNumber = sc.next();
 										sc.nextLine();
-										while (!school.getStudent(studentIndex).isValidTelephone(phoneNumber)) {
+										while (!school.getStudents().get(studentIndex).isValidTelephone(phoneNumber)) {
 											System.out.println("Enter a valid phone number");
 											phoneNumber = sc.next();
 											sc.nextLine();
 										}
-										school.getStudent(studentIndex).setTelephone(phoneNumber);
+										school.getStudents().get(studentIndex).setTelephone(phoneNumber);
 										System.out.println("Done.");
 										break;
 									case "5": // absenses
 										System.out.println("Your actual number of asenses is "
-												+ school.getStudent(studentIndex).getAbsenses()
+												+ school.getStudents().get(studentIndex).getAbsenses()
 												+ "\nEnter the new number of asenses bellow:");
 										boolean keepAsking = true;
 										while (keepAsking) {
 											if (sc.hasNextInt()) {
-												school.getStudent(studentIndex).setAbsenses(sc.nextInt());
+												school.getStudents().get(studentIndex).setAbsenses(sc.nextInt());
 												keepAsking = false;
 											} else
 												System.out.println("Enter a valid value");
@@ -509,20 +495,20 @@ public class SchoolManagement {
 										break;
 									case "6": // classroom
 										System.out.println("Your actual classroom is "
-												+ school.getStudent(studentIndex).getClassroom()
+												+ school.getStudents().get(studentIndex).getClassroom()
 												+ "\nEnter the new classroom bellow:");
-										school.getStudent(studentIndex).setClassroom(sc.next());
+										school.getStudents().get(studentIndex).setClassroom(sc.next());
 										sc.nextLine();
 										System.out.println("Done.");
 										break;
 									case "7": // markAverage
 										System.out.println("Your actual mark average is "
-												+ school.getStudent(studentIndex).getMarkAverage()
+												+ school.getStudents().get(studentIndex).getMarkAverage()
 												+ "\nEnter the new mark average bellow:");
 										keepAsking = true;
 										while (keepAsking) {
 											if (sc.hasNextInt()) {
-												school.getStudent(studentIndex).setMarkAverage(sc.nextInt());
+												school.getStudents().get(studentIndex).setMarkAverage(sc.nextInt());
 												keepAsking = false;
 											} else
 												System.out.println("Enter a valid value");
@@ -530,8 +516,11 @@ public class SchoolManagement {
 										System.out.println("Done.");
 										break;
 									case "8": // course
+										
+										//There is not a course property
+										/*
 										System.out.println(
-												"Your actual course is " + school.getStudent(studentIndex).getCourse()
+												"Your actual course is " + school.getStudents().get(studentIndex).getCourse()
 														+ "\nEnter the new course bellow:");
 										keepAsking = true;
 										while (keepAsking) {
@@ -542,8 +531,12 @@ public class SchoolManagement {
 												System.out.println("Enter a valid value");
 										}
 										System.out.println("Done.");
+										*/
 										break;
 									case "9":
+										
+										//There is not a repeater property
+										/*
 										if (school.getStudent(studentIndex).getRepeater())
 											System.out.print("You are suposed to be a repeater now,");
 										else
@@ -568,6 +561,7 @@ public class SchoolManagement {
 												break;
 											}
 										}
+										*/
 										break;
 									}
 								}
@@ -597,11 +591,13 @@ public class SchoolManagement {
 						System.out.println("Name:");
 						String possibleName = sc.next();
 						sc.nextLine();
+						/*
 						while (!student.checkName(possibleName)) {
 							System.out.println("Enter a valid name (no numbers)");
 							possibleName = sc.next();
 							sc.nextLine();
 						}
+						*/
 						student.setName(possibleName);
 
 						// birth date
@@ -612,8 +608,7 @@ public class SchoolManagement {
 						int month = sc.nextInt();
 						System.out.println("day:");
 						int day = sc.nextInt();
-						Calendar birthDate = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-								.build();
+						String birthDate = year+"/"+month+"/"+day;
 						while (!student.isValidDate(birthDate)) {
 							System.out.println("Enter a valid date");
 							System.out.println("year:");
@@ -622,8 +617,7 @@ public class SchoolManagement {
 							month = sc.nextInt();
 							System.out.println("day:");
 							day = sc.nextInt();
-							birthDate = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-									.build();
+							birthDate = year+"/"+month+"/"+day;
 						}
 						student.setBirthDate(birthDate);
 
@@ -676,6 +670,7 @@ public class SchoolManagement {
 						}
 
 						// course
+						/*
 						System.out.println("Course:");
 						keepAsking = true;
 						while (keepAsking) {
@@ -685,8 +680,9 @@ public class SchoolManagement {
 							} else
 								System.out.println("Enter a valid value");
 						}
-
+*/
 						// repeater
+						/*
 						System.out.println("Are you a repeater? (y/n)");
 						boolean askAgain = true;
 						while (askAgain) {
@@ -705,7 +701,7 @@ public class SchoolManagement {
 								break;
 							}
 						}
-
+*/
 						// add the student to the school
 						school.addStudent(student);
 						// print the created ID for the student
@@ -717,10 +713,17 @@ public class SchoolManagement {
 									"Whose tutor do you want to know? (Enter the ID of the Student you want to find)");
 							int studentIndex = school.findStudentID(sc.next().toUpperCase());
 							sc.nextLine();
+							
 							if (studentIndex >= 0) {
-								int tutorIndex = school.tutorOf(school.getStudent(studentIndex).getClassroom());
+								int tutorIndex=-1;
+								for(int i=0; i<school.getTeachers().size();i++) {
+									if(school.getStudents().get(studentIndex).getClassroom().matches(school.getTeachers().get(i).getTutor())){
+										tutorIndex=i;
+										break;
+									}
+								}
 								if (tutorIndex >= 0)
-									System.out.println("The tutor of " + school.getStudent(studentIndex).getName()
+									System.out.println("The tutor of " + school.getStudents().get(studentIndex).getName()
 											+ " is " + school.getTeachers().get(tutorIndex).getName()+", "+school.getTeachers().get(tutorIndex).getTeacherID());
 								else
 									System.out.println("That class has not tutor assigned");
@@ -754,8 +757,8 @@ public class SchoolManagement {
 					case "1":
 						if (school.getAdministratives().size() > 0) {
 							for (int i = 0; i < school.getAdministratives().size(); i++) {
-								System.out.println("- " + school.getAdministrative(i).getAdministrativeID() + "\t"
-										+ school.getAdministrative(i).getName());
+								System.out.println("- " + school.getAdministratives().get(i).getAdministrativeID() + "\t"
+										+ school.getAdministratives().get(i).getName());
 							}
 						} else
 							System.out.println("There's no administrative created yet.");
@@ -768,31 +771,19 @@ public class SchoolManagement {
 							sc.nextLine();
 							System.out.println(administrativeIndex);
 							if (administrativeIndex >= 0) {
-								System.out.println("Name:\t" + school.getAdministrative(administrativeIndex).getName());
-								String date = school.getAdministrative(administrativeIndex).getBirthDate()
-										.get(Calendar.DAY_OF_MONTH)
-										+ "/"
-										+ school.getAdministrative(administrativeIndex).getBirthDate()
-												.get(Calendar.MONTH)
-										+ "/" + school.getAdministrative(administrativeIndex).getBirthDate()
-												.get(Calendar.YEAR);
-								System.out.println("Birth date:\t" + date);
-								System.out.println("Dni:\t" + school.getAdministrative(administrativeIndex).getDni());
+								System.out.println("Name:\t" + school.getAdministratives().get(administrativeIndex).getName());
+								System.out.println("Birth date:\t" + school.getAdministratives().get(administrativeIndex).getBirthDate());
+								System.out.println("Dni:\t" + school.getAdministratives().get(administrativeIndex).getDni());
 								System.out.println("Phone number:\t "
-										+ school.getAdministrative(administrativeIndex).getTelephone());
+										+ school.getAdministratives().get(administrativeIndex).getTelephone());
 								System.out.println(
-										"Salary:\t " + school.getAdministrative(administrativeIndex).getSalary());
-								date = school.getAdministrative(administrativeIndex).getJoined()
-										.get(Calendar.DAY_OF_MONTH) + "/"
-										+ school.getAdministrative(administrativeIndex).getJoined().get(Calendar.MONTH)
-										+ "/"
-										+ school.getAdministrative(administrativeIndex).getJoined().get(Calendar.YEAR);
-								System.out.println("Joined date:\t" + date);
-								if (school.getAdministrative(administrativeIndex).getNumberOfLanguages() > 0)
-									for (int i = 0; i < school.getAdministrative(administrativeIndex)
-											.getNumberOfLanguages(); i++)
+										"Salary:\t " + school.getAdministratives().get(administrativeIndex).getSalary());
+								System.out.println("Joined date:\t" + school.getAdministratives().get(administrativeIndex).getJoinedDate());
+								if (school.getAdministratives().get(administrativeIndex).getLanguages().size() > 0)
+									for (int i = 0; i < school.getAdministratives().get(administrativeIndex)
+											.getLanguages().size(); i++)
 										System.out.println(
-												school.getAdministrative(administrativeIndex).getLanguages()[i]);
+												school.getAdministratives().get(administrativeIndex).getLanguages().get(i));
 							} else
 								System.out.println("Wrong administrative ID");
 						} else
@@ -822,27 +813,15 @@ public class SchoolManagement {
 										break;
 									case "1": // name
 										System.out.println("Your actual name is "
-												+ school.getAdministrative(administrativeIndex).getName()
+												+ school.getAdministratives().get(administrativeIndex).getName()
 												+ "\nEnter the new name bellow:");
 										String possibleName = sc.next();
 										sc.nextLine();
-										while (!school.getAdministrative(administrativeIndex).checkName(possibleName)) {
-											System.out.println("Enter a valid name (no numbers)");
-											possibleName = sc.next();
-											sc.nextLine();
-										}
-										school.getAdministrative(administrativeIndex).setName(possibleName);
+										school.getAdministratives().get(administrativeIndex).setName(possibleName);
 										System.out.println("Done.");
 										break;
 									case "2": // birth date
-										String date = school.getAdministrative(administrativeIndex).getBirthDate()
-												.get(Calendar.DAY_OF_MONTH)
-												+ "/"
-												+ school.getAdministrative(administrativeIndex).getBirthDate()
-														.get(Calendar.MONTH)
-												+ "/" + school.getAdministrative(administrativeIndex).getBirthDate()
-														.get(Calendar.YEAR);
-										System.out.println("Your actual birth date is " + date
+										System.out.println("Your actual birth date is " + school.getAdministratives().get(administrativeIndex).getBirthDate()
 												+ "\nEnter the new birth date bellow:");
 										System.out.println("year:");
 										int year = sc.nextInt();
@@ -850,9 +829,8 @@ public class SchoolManagement {
 										int month = sc.nextInt();
 										System.out.println("day:");
 										int day = sc.nextInt();
-										Calendar birthDate = new Calendar.Builder().setCalendarType("iso8601")
-												.setDate(year, month, day).build();
-										while (!school.getAdministrative(administrativeIndex).isValidDate(birthDate)) {
+										String birthDate = year+"/"+month+"/"+day;
+										while (!school.getStudents().get(administrativeIndex).isValidDate(birthDate)) {
 											System.out.println("Enter a valid date");
 											System.out.println("year:");
 											year = sc.nextInt();
@@ -860,66 +838,61 @@ public class SchoolManagement {
 											month = sc.nextInt();
 											System.out.println("day:");
 											day = sc.nextInt();
-											birthDate = new Calendar.Builder().setCalendarType("iso8601")
-													.setDate(year, month, day).build();
+											birthDate = year+"/"+month+"/"+day;
 										}
-										school.getAdministrative(administrativeIndex).setBirthDate(birthDate);
+										school.getStudents().get(administrativeIndex).setBirthDate(birthDate);
 										System.out.println("Done.");
 										break;
 									case "3": // dni
 										System.out.println("Your actual dni is "
-												+ school.getAdministrative(administrativeIndex).getDni()
+												+ school.getAdministratives().get(administrativeIndex).getDni()
 												+ "\nEnter the new dni bellow:");
 										String dni = sc.next();
 										sc.nextLine();
-										while (!school.getAdministrative(administrativeIndex).isValidDni(dni)) {
+										while (!school.getAdministratives().get(administrativeIndex).isValidDni(dni)) {
 											System.out.println("Enter a valid DNI");
 											dni = sc.next();
 											sc.nextLine();
 										}
-										school.getAdministrative(administrativeIndex).setDni(dni);
+										school.getAdministratives().get(administrativeIndex).setDni(dni);
 										System.out.println("Done.");
 										break;
 									case "4": // phone number
 										System.out.println("Your actual phone number is "
-												+ school.getAdministrative(administrativeIndex).getTelephone()
+												+ school.getAdministratives().get(administrativeIndex).getTelephone()
 												+ "\nEnter the new phone number bellow:");
 										String phoneNumber = sc.next();
 										sc.nextLine();
-										while (!school.getAdministrative(administrativeIndex)
+										while (!school.getAdministratives().get(administrativeIndex)
 												.isValidTelephone(phoneNumber)) {
 											System.out.println("Enter a valid phone number");
 											phoneNumber = sc.next();
 											sc.nextLine();
 										}
-										school.getAdministrative(administrativeIndex).setTelephone(phoneNumber);
+										school.getAdministratives().get(administrativeIndex).setTelephone(phoneNumber);
 										System.out.println("Done.");
 										break;
 									case "5": // salary
 										System.out.println("Your actual salary is "
-												+ school.getAdministrative(administrativeIndex).getSalary()
+												+ school.getAdministratives().get(administrativeIndex).getSalary()
 												+ "\nEnter the new salary bellow:");
 										double salary = sc.nextDouble();
-										while (!school.getAdministrative(administrativeIndex).checkSalary(salary)) {
-											System.out.println("Enter a valid salary");
-											salary = sc.nextDouble();
-										}
-										school.getAdministrative(administrativeIndex).setSalary(salary);
+										school.getAdministratives().get(administrativeIndex).setSalary(salary);
 										System.out.println("Done.");
 										break;
 									case "6": // languages
 										System.out.println("Your actual languages are ");
-										for (int i = 0; i < school.getAdministrative(administrativeIndex)
-												.getLanguages().length; i++)
+										for (int i = 0; i < school.getAdministratives().get(administrativeIndex)
+												.getLanguages().size(); i++)
 											System.out.println("\t"
-													+ school.getAdministrative(administrativeIndex).getLanguages()[i]);
+													+ school.getAdministratives().get(administrativeIndex).getLanguages().get(i));
 										System.out.println("How many subjects are you teaching now?");
 										int numberOfLanguages = sc.nextInt();
 										String[] languages = new String[numberOfLanguages];
 										for (int i = 0; i < numberOfLanguages; i++) {
 											System.out.println("enter one language");
-											school.getAdministrative(administrativeIndex)
-											.addLanguages(sc.next()); 
+											school.getAdministratives().get(administrativeIndex)
+											.addLanguage(sc.next()); 
 											sc.nextLine();
 
 										}
@@ -950,13 +923,9 @@ public class SchoolManagement {
 						Administrative administrative = new Administrative();
 						// name
 						System.out.println("Name:");
+//there's no method for the checking of the name
 						String possibleName = sc.next();
 						sc.nextLine();
-						while (!administrative.checkName(possibleName)) {
-							System.out.println("Enter a valid name (no numbers)");
-							possibleName = sc.next();
-							sc.nextLine();
-						}
 						administrative.setName(possibleName);
 
 						// birth date
@@ -967,8 +936,7 @@ public class SchoolManagement {
 						int month = sc.nextInt();
 						System.out.println("day:");
 						int day = sc.nextInt();
-						Calendar birthDate = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-								.build();
+						String birthDate = year+"/"+month+"/"+year;
 						while (!administrative.isValidDate(birthDate)) {
 							System.out.println("Enter a valid date");
 							System.out.println("year:");
@@ -977,8 +945,7 @@ public class SchoolManagement {
 							month = sc.nextInt();
 							System.out.println("day:");
 							day = sc.nextInt();
-							birthDate = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-									.build();
+							birthDate = year+"/"+month+"/"+year;
 						}
 						administrative.setBirthDate(birthDate);
 
@@ -1007,10 +974,6 @@ public class SchoolManagement {
 						// salary
 						System.out.println("Salary:");
 						double salary = sc.nextDouble();
-						while (!administrative.checkSalary(salary)) {
-							System.out.println("Enter a valid salary");
-							salary = sc.nextDouble();
-						}
 						administrative.setSalary(salary);
 
 						// joined date
@@ -1021,8 +984,7 @@ public class SchoolManagement {
 						month = sc.nextInt();
 						System.out.println("day:");
 						day = sc.nextInt();
-						Calendar joined = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-								.build();
+						String joined = year+"/"+month+"/"+year;
 						while (!administrative.isValidDate(joined)) {
 							System.out.println("Enter a valid date");
 							System.out.println("year:");
@@ -1031,10 +993,9 @@ public class SchoolManagement {
 							month = sc.nextInt();
 							System.out.println("day:");
 							day = sc.nextInt();
-							joined = new Calendar.Builder().setCalendarType("iso8601").setDate(year, month, day)
-									.build();
+							joined = year+"/"+month+"/"+year;
 						}
-						administrative.setJoined(joined);
+						administrative.setJoinedDate(joined);
 
 						// languages
 						System.out.println("Languages:");
@@ -1044,7 +1005,7 @@ public class SchoolManagement {
 							System.out.println("enter one language");
 							String language = sc.next();
 							sc.nextLine();
-							administrative.addLanguages(language);
+							administrative.addLanguage(language);
 						}
 						
 						//add the administrative to the school
